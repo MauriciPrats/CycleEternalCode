@@ -42,7 +42,6 @@ void MainScene::loadSceneElements(){
 //Callbacks
 void MainScene::startGameCallback(Ref* pSender)
 {
-
 	Scene* levelSelectScene = LevelSelectScene::createScene();
 	goToScene(levelSelectScene);
 }

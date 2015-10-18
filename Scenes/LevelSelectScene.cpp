@@ -2,6 +2,7 @@
 #include "src/UI/Buttons/ButtonManager.h"
 #include "src/UI/Labels/LabelManager.h"
 #include "src/Scenes/MainScene.h"
+#include "src/Scenes/GameScene.h"
 
 USING_NS_CC;
 
@@ -50,7 +51,9 @@ void LevelSelectScene::backCallback(Ref* pSender)
 
 void LevelSelectScene::goToLevelCallback(Ref* pSender)
 {
-
+	//TEMPORAL: Goes to the Game scene, it will have to change when de level picker is implemented
+	Scene* gameScene = GameScene::createScene();
+	goToScene(gameScene);
 
 }
 
