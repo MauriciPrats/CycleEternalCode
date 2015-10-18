@@ -14,6 +14,7 @@
 static class Util
 {
 public:	
+
 	// trim from start
 	static inline std::string &ltrim(std::string &s) {
 		s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
@@ -31,6 +32,7 @@ public:
 		return ltrim(rtrim(s));
 	}
 
+	// split string into vector with delimiter using references
 	static inline std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) {
 		std::stringstream ss(s);
 		std::string item;
@@ -40,7 +42,7 @@ public:
 		return elems;
 	}
 
-
+	// split string into vector with delimiter
 	static inline std::vector<std::string> split(const std::string &s, char delim) {
 		std::vector<std::string> elems;
 		split(s, delim, elems);
