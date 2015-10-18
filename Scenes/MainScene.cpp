@@ -16,21 +16,10 @@ Scene* MainScene::createScene()
     // add layer as a child to scene
     scene->addChild(layer);
 
-
     // return the scene
     return scene;
 }
 
-// on "init" you need to initialize your instance
-bool MainScene::init()
-{
-    //Super init first
-    if ( !Layer::init() ){ return false; }
-
-	loadSceneElements();
-
-    return true;
-}
 
 void MainScene::loadSceneElements(){
 
@@ -55,10 +44,7 @@ void MainScene::startGameCallback(Ref* pSender)
 {
 
 	Scene* levelSelectScene = LevelSelectScene::createScene();
-	// Transition Fade
-	Director::getInstance()->replaceScene(TransitionFade::create(0.5, levelSelectScene, Color3B(0, 0, 0)));
-
-
+	goToScene(levelSelectScene);
 }
 
 void MainScene::quitGameCallback(Ref* pSender)

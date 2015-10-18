@@ -21,17 +21,6 @@ Scene* LevelSelectScene::createScene()
 	return scene;
 }
 
-// on "init" you need to initialize your instance
-bool LevelSelectScene::init()
-{
-	//Super init first
-	if (!Layer::init()){ return false; }
-
-	loadSceneElements();
-
-	return true;
-}
-
 void LevelSelectScene::loadSceneElements(){
 
 	//Menu Items
@@ -53,9 +42,9 @@ void LevelSelectScene::loadSceneElements(){
 //Callbacks
 void LevelSelectScene::backCallback(Ref* pSender)
 {
-	Scene* levelSelectScene = MainScene::createScene();
+	Scene* mainMenuScene = MainScene::createScene();
 	// Transition Fade
-	Director::getInstance()->replaceScene(TransitionFade::create(0.5, levelSelectScene, Color3B(0, 0, 0)));
+	goToScene(mainMenuScene);
 
 }
 

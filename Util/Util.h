@@ -48,7 +48,6 @@ public:
 		split(s, delim, elems);
 		return elems;
 	}
-
 };
 
 
