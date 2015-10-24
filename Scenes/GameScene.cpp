@@ -1,4 +1,6 @@
 #include "GameScene.h"
+#include "src/Gameplay/Paths/Path.h"
+#include "src/Gameplay/Paths/PathManager.h"
 
 USING_NS_CC;
 
@@ -18,5 +20,5 @@ Scene* GameScene::createScene()
 }
 
 void GameScene::loadSceneElements(){
-
+	Path* path = PathManager::createLinePath(10, 100, 200, 20);
 }
