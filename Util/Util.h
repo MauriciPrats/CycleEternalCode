@@ -10,6 +10,7 @@
 #include <cctype>
 #include <locale>
 #include <CCFileUtils.h>
+#include "cocos2d.h"
 
 static class Util
 {
@@ -47,6 +48,60 @@ public:
 		std::vector<std::string> elems;
 		split(s, delim, elems);
 		return elems;
+	}
+
+	static float getCurrentAngle(cocos2d::Node* node)
+	{
+		float rotAng = node->getRotation();
+
+		if (rotAng >= 180.f)
+		{
+			rotAng -= 360.f;
+		}
+		else if (rotAng < -180.f)
+		{
+			rotAng += 360.f;
+		}
+
+		// negative angle means node is facing to its left
+		// positive angle means node is facing to its right
+		return rotAng;
+	}
+
+	static float getAngleDifference(float angle1, float angle2)
+	{
+		float diffAngle = (angle1 - angle2);
+
+		if (diffAngle >= 180.f)
+		{
+			diffAngle -= 360.f;
+		}
+		else if (diffAngle < -180.f)
+		{
+			diffAngle += 360.f;
+		}
+
+		// how much angle the node needs to rotate
+		return diffAngle;
+	}
+
+	static float getAngleOfTwoVectors(cocos2d::Point vec1, cocos2d::Point vec2)
+	{
+		auto vectorFromVec1ToVec2 = vec2 - vec1;
+		// the angle between two vectors
+		return CC_RADIANS_TO_DEGREES(-vectorFromVec1ToVec2.getAngle());
+	}
+
+	static void rotateNodeToPoint(cocos2d::Node* node, cocos2d::Point point)
+	{
+		float angleNodeToRotateTo = getAngleOfTwoVectors(node->getPosition(), point);
+		float nodeCurrentAngle = getCurrentAngle(node);
+
+		float diffAngle = getAngleDifference(angleNodeToRotateTo, nodeCurrentAngle);
+
+		float rotation = nodeCurrentAngle + diffAngle;
+
+		node->setRotation(rotation);
 	}
 };
 
