@@ -20,14 +20,42 @@ Scene* GameScene::createScene()
 	return scene;
 }
 
-void GameScene::loadSceneElements(){
-	Path* linePath = PathManager::getInstance().createLinePath(10, 100, 200, 20);
-	linePath->linkPathToLayer(this);
+bool GameScene::onTouchEvent(Touch* touch, Event* event){
+	cocos2d::Vec2 pos = Director::sharedDirector()->convertToGL(touch->getLocationInView());
+	processInput(pos);
+	return false;
+}
 
+void GameScene::onMouseEvent(Event* event){
+	EventMouse* e = (EventMouse*)event;
+	cocos2d::Vec2 pos = cocos2d::Vec2(e->getCursorX(), e->getCursorY());
+	processInput(pos);
+}
+
+void  GameScene::processInput(cocos2d::Vec2 position){
+	PathSegment* closestPathSegment = pathsGroup->getLastInsertedPath()->getPathSegmentClosestToPoint(position.x, position.y);
+
+	cocos2d::Vec2 closestPathPosition = cocos2d::Vec2(closestPathSegment->getPositionX(), closestPathSegment->getPositionY());
+	float distance = closestPathPosition.distance(position);
+
+	Path* circlePath = PathManager::getInstance().createCirclePath(position.x, position.y, distance);
+	circlePath->linkPathToLayer(this);
+	PathSegment* closestSegmentNewPath = circlePath->getPathSegmentClosestToPoint(closestPathPosition.x, closestPathPosition.y);
+	pathsGroup->connectPath(circlePath, closestPathSegment, closestSegmentNewPath);
+}
+
+void GameScene::loadSceneElements(){
 	Path* circlePath = PathManager::getInstance().createCirclePath(300, 200, 100);
 	circlePath->linkPathToLayer(this);
 
-	PathsGroup* pathsGroup = new PathsGroup(linePath);
-	pathsGroup->connectPath(circlePath,linePath->getFirstPathSegment()->getNextPathSegment()->getNextPathSegment(),circlePath->getFirstPathSegment()->getNextPathSegment()->getNextPathSegment());
+	pathsGroup = new PathsGroup(circlePath);
+	
+	auto listener1 = EventListenerTouchOneByOne::create();
+	listener1->onTouchBegan = CC_CALLBACK_2(GameScene::onTouchEvent, this);
 
+	auto listener2 = EventListenerMouse::create();
+	listener2->onMouseDown = CC_CALLBACK_1(GameScene::onMouseEvent, this);
+	
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener1, this);
+	_eventDispatcher->addEventListenerWithSceneGraphPriority(listener2, this);
 }

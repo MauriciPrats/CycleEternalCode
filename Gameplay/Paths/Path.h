@@ -15,8 +15,9 @@ public:
 	void linkPathToLayer(cocos2d::Layer* layer);
 	void unlinkPathToLayer(cocos2d::Layer* layer);
 	void setFirstPathSegment(PathSegment* pathSegment);
-	PathSegment* getFirstPathSegment(){ return firstPathSegment; }
 	void recalculatePathSegments();
+	PathSegment* getFirstPathSegment(){ return firstPathSegment; }
+	PathSegment* getPathSegmentClosestToPoint(float x_position, float y_position);
 
 private:
 

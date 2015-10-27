@@ -15,7 +15,6 @@ void PathsGroup::connectPath(Path* newPath, PathSegment* segmentOldPath, PathSeg
 	lastPath = newPath;
 }
 
-
 PathsGroup::~PathsGroup()
 {
 }

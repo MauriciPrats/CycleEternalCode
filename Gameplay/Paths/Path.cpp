@@ -46,6 +46,26 @@ void Path::setFirstPathSegment(PathSegment* pathSegment){
 	recalculatePathSegments();
 }
 
+PathSegment* Path::getPathSegmentClosestToPoint(float x_position, float y_position){
+	
+	cocos2d::Vec2 position = cocos2d::Vec2(x_position, y_position);
+	PathSegment* actualSegment = firstPathSegment;
+	PathSegment* closestSegment = actualSegment;
+	cocos2d::Vec2 positionSeg = cocos2d::Vec2(actualSegment->getPositionX(), actualSegment->getPositionY());
+	float minSquaredDistance = position.distanceSquared(positionSeg);
+	while (actualSegment->hasNext()){
+		actualSegment = actualSegment->getNextPathSegment();
+		positionSeg = cocos2d::Vec2(actualSegment->getPositionX(), actualSegment->getPositionY());
+		float squaredDistance = position.distanceSquared(positionSeg);
+		if (squaredDistance < minSquaredDistance){
+			minSquaredDistance = squaredDistance;
+			closestSegment = actualSegment;
+		}
+	}
+
+	return closestSegment;
+}
+
 void Path::clearSegments(std::map<long, PathSegment*>* segmentsToClear){
 	std::map<long, PathSegment*>::iterator it = segmentsToClear->begin();
 	while (it != segmentsToClear->end()){
