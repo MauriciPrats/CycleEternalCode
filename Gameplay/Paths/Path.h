@@ -8,6 +8,8 @@ class Path
 {
 public:
 
+	typedef enum PathType{Circle = 0, Line = 1};
+
 	Path(long idPath,PathSegment* firstSegment);
 	~Path();
 
@@ -20,8 +22,8 @@ public:
 	PathSegment* getPathSegmentClosestToPoint(float x_position, float y_position);
 
 private:
-
 	long idPath;
+	PathType pathType;
 	PathSegment* firstPathSegment;
 	std::map<long,PathSegment*>* pathSegments;
 
