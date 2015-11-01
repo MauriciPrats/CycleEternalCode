@@ -19,9 +19,11 @@ public:
 
 	PathSegment* getNextPathSegment() const { if (directionLastToNext){ return nextSegment; }else{ return lastSegment; } }
 	void getPathDirection(cocos2d::Vec2& result) const;
+	void setDirection(bool newDirection){ directionLastToNext = newDirection; }
 	const float getPositionX() const { return position_x; }
 	const float getPositionY() const { return position_y; }
 	const long getIdPath() const { return idPath; }
+	const bool isDirectionLastToNext() const { return directionLastToNext; }
 
 private:
 

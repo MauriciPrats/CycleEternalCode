@@ -33,14 +33,25 @@ const bool PathSegment::hasNext() const {
 void PathSegment::getPathDirection(cocos2d::Vec2& result) const{
 	cocos2d::Vec2 direction = cocos2d::Vec2(0, 0);
 	cocos2d::Vec2 position = cocos2d::Vec2(position_x, position_y);
+	
 	if (lastSegment != nullptr){
 		cocos2d::Vec2 lastPosition = cocos2d::Vec2(lastSegment->getPositionX(), lastSegment->getPositionY());
-		direction = direction + (position - lastPosition);
+		if (directionLastToNext){
+			direction = direction + (position - lastPosition);
+		}
+		else{
+			direction = direction + (lastPosition - position);
+		}
 	}
 
 	if (nextSegment != nullptr){
 		cocos2d::Vec2 nextPosition = cocos2d::Vec2(nextSegment->getPositionX(), nextSegment->getPositionY());
-		direction = direction + (nextPosition - position);
+		if (directionLastToNext){
+			direction = direction + (nextPosition - position);
+		}
+		else{
+			direction = direction + (position - nextPosition);
+		}
 	}
 
 	result.x = direction.x;

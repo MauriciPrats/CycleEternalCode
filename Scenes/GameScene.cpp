@@ -38,7 +38,7 @@ void  GameScene::processInput(cocos2d::Vec2 position){
 	cocos2d::Vec2 closestPathPosition = cocos2d::Vec2(closestPathSegment->getPositionX(), closestPathSegment->getPositionY());
 	float distance = closestPathPosition.distance(position);
 
-	Path* circlePath = PathManager::getInstance().createCirclePath(position.x, position.y, distance);
+	Path* circlePath = PathManager::getInstance().createCirclePath(position.x, position.y, closestPathPosition.x,closestPathPosition.y);
 	circlePath->linkPathToLayer(this);
 
 	pathsGroup->connectPath(circlePath,position);

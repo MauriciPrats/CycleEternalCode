@@ -12,7 +12,7 @@ public:
 		return pathManagerInstance;
 	}
 
-	Path* createCirclePath(const float x_position, const float y_position, const float radius);
+	Path* createCirclePath(const float x_position, const float y_position, const float starting_x_position, const float starting_y_position);
 	Path* createLinePath(const float x_position_start, const float y_position_start, 
 		const float x_position_end, const float y_position_end);
 

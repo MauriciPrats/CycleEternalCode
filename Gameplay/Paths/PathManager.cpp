@@ -9,21 +9,27 @@ PathManager::PathManager()
 	pathId = 0;
 }
 
-Path* PathManager::createCirclePath(const float x_position, const float y_position, const float radius){
+Path* PathManager::createCirclePath(const float x_position, const float y_position,const float starting_x_position, const float starting_y_position){
 	//Has to create a path that contains the right Path Segments for a circle with the given attributes
 	
+	float radius = cocos2d::Vec2(x_position, y_position).distance(cocos2d::Vec2(starting_x_position, starting_y_position));
 	float circlePerimeter = 2.0f * M_PI * radius;
 	int ammountOfSegments = circlePerimeter / Constants::getInstance().PATH_SEGMENT_SIZE;
 	float anglePerSegment = 360.0f / ammountOfSegments;
-	anglePerSegment = anglePerSegment * (M_PI / 180);
+	anglePerSegment = anglePerSegment * (M_PI / 180); // Convert to radians
+
+	float deltaStartingX = starting_x_position - x_position;
+	float deltaStartingY = starting_y_position - y_position;
+
+	float startingAngle = atan(deltaStartingY / deltaStartingY);
 
 	std::vector<PathSegment*> segmentsVector = std::vector<PathSegment*>();
 	long idPath = getNextPathId();
 
 	//Create the segments
 	for (int i = 0; i < ammountOfSegments; ++i){
-		float newx = (cos(anglePerSegment*i) * radius) + x_position;
-		float newy = (sin(anglePerSegment*i) * radius) + y_position;
+		float newx = (cos((anglePerSegment*i) + startingAngle) * radius) + x_position;
+		float newy = (sin((anglePerSegment*i) + startingAngle) * radius) + y_position;
 		PathSegment* pathSegment = new PathSegment(idPath,getNextSegmentId(), newx, newy, true);
 		segmentsVector.push_back(pathSegment);
 	}
@@ -35,7 +41,7 @@ Path* PathManager::createCirclePath(const float x_position, const float y_positi
 	}
 
 	//Return the path
-	Path* path = new Path(idPath,segmentsVector[0]);
+	Path* path = new Path(idPath,Path::PathType::Circle,segmentsVector[0]);
 	return path;
 }
 
@@ -71,6 +77,6 @@ Path* PathManager::createLinePath(const float x_position_start, const float y_po
 	}
 
 	//Return the path
-	Path* path = new Path(idPath,segmentsVector[0]);
+	Path* path = new Path(idPath, Path::PathType::Line, segmentsVector[0]);
 	return path;
 }

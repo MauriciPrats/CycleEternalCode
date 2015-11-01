@@ -1,10 +1,11 @@
 #include "Path.h"
 #include "cocos2d.h"
 
-Path::Path(long idPath,PathSegment* firstSegment)
+Path::Path(long idPath,PathType pathType, PathSegment* firstSegment)
 {
 	this->idPath = idPath;
 	this->firstPathSegment = firstSegment;
+	this->pathType = pathType;
 	pathSegments = new std::map<long, PathSegment*>();
 	recalculatePathSegments();
 }
@@ -94,4 +95,23 @@ void Path::unlinkPathToLayer(cocos2d::Layer* layer){
 		actualSegment = actualSegment->getNextPathSegment();
 		actualSegment->removeFromLayer(layer);
 	}
+}
+
+PathSegment* Path::getLastPathSegment(){
+	PathSegment* actualSegment = firstPathSegment;
+	while (actualSegment->hasNext()){
+		actualSegment = actualSegment->getNextPathSegment();
+	}
+	return actualSegment;
+}
+
+void Path::invertPathDirection(){
+	PathSegment* lastPathSegment = getLastPathSegment();
+	PathSegment* actualSegment = firstPathSegment;
+	actualSegment->setDirection(!actualSegment->isDirectionLastToNext());
+	while (actualSegment->hasNext()){
+		actualSegment = actualSegment->getNextPathSegment();
+		actualSegment->setDirection(!actualSegment->isDirectionLastToNext());
+	}
+	firstPathSegment = lastPathSegment;
 }
