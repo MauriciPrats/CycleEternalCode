@@ -21,8 +21,8 @@ Path* PathManager::createCirclePath(const float x_position, const float y_positi
 	float deltaStartingX = starting_x_position - x_position;
 	float deltaStartingY = starting_y_position - y_position;
 
-	float startingAngle = atan(deltaStartingY / deltaStartingY);
-
+	float startingAngle = atan2(deltaStartingY,deltaStartingX);
+	CCLOG("%f", startingAngle);
 	std::vector<PathSegment*> segmentsVector = std::vector<PathSegment*>();
 	long idPath = getNextPathId();
 

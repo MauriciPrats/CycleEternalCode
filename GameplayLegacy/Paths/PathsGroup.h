@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "src/Gameplay/Paths/Path.h"
+#include "src/GameplayLegacy/Paths/Path.h"
 
 class PathsGroup
 {

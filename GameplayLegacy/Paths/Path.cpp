@@ -54,7 +54,7 @@ PathSegment* Path::getPathSegmentClosestToPoint(float x_position, float y_positi
 	PathSegment* closestSegment = actualSegment;
 	cocos2d::Vec2 positionSeg = cocos2d::Vec2(actualSegment->getPositionX(), actualSegment->getPositionY());
 	float minSquaredDistance = position.distanceSquared(positionSeg);
-	while (actualSegment->hasNext()){
+	while (actualSegment->hasNext() && idPath == actualSegment->getIdPath()){
 		actualSegment = actualSegment->getNextPathSegment();
 		positionSeg = cocos2d::Vec2(actualSegment->getPositionX(), actualSegment->getPositionY());
 		float squaredDistance = position.distanceSquared(positionSeg);
@@ -82,7 +82,7 @@ void Path::clearSegments(std::map<long, PathSegment*>* segmentsToClear){
 void Path::linkPathToLayer(cocos2d::Layer* layer){
 	PathSegment* actualSegment = firstPathSegment;
 	actualSegment->linkToLayer(layer);
-	while (actualSegment->hasNext()){
+	while (actualSegment->hasNext() && idPath == actualSegment->getIdPath()){
 		actualSegment = actualSegment->getNextPathSegment();
 		actualSegment->linkToLayer(layer);
 	}
@@ -91,7 +91,7 @@ void Path::linkPathToLayer(cocos2d::Layer* layer){
 void Path::unlinkPathToLayer(cocos2d::Layer* layer){
 	PathSegment* actualSegment = firstPathSegment;
 	actualSegment->removeFromLayer(layer);
-	while (actualSegment->hasNext()){
+	while (actualSegment->hasNext() && idPath == actualSegment->getIdPath()){
 		actualSegment = actualSegment->getNextPathSegment();
 		actualSegment->removeFromLayer(layer);
 	}
@@ -99,7 +99,7 @@ void Path::unlinkPathToLayer(cocos2d::Layer* layer){
 
 PathSegment* Path::getLastPathSegment(){
 	PathSegment* actualSegment = firstPathSegment;
-	while (actualSegment->hasNext()){
+	while (actualSegment->hasNext() && idPath == actualSegment->getIdPath()){
 		actualSegment = actualSegment->getNextPathSegment();
 	}
 	return actualSegment;

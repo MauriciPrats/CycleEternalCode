@@ -2,8 +2,8 @@
 
 #include "cocos2d.h"
 #include "src/Scenes/BaseScene.h"
-#include "src/Gameplay/Paths/PathsGroup.h"
-
+#include "src/Gameplay/Train/Train.h"
+#include <vector>
 class GameScene : public BaseScene
 {
 public:
@@ -13,10 +13,17 @@ public:
 
 	// Implementation of the keyboard event callback function prototype
 	bool onTouchEvent(cocos2d::Touch* touch, cocos2d::Event* event);
-	void onMouseEvent(cocos2d::Event* event);
-	void processInput(cocos2d::Vec2 position);
+	void onMouseEventDown(cocos2d::Event* event);
+	void onMouseEventUp(cocos2d::Event* event);
+
+	void processInput(cocos2d::Vec2 position,float deltaTime);
+	void update(float deltaTime);
 protected:
+	std::vector<Train*>* trains;
 	void loadSceneElements();
-	PathsGroup* pathsGroup;
+	bool isMousePressedDown;
+	cocos2d::Vec2* lastPointPressed;
+	float actualDampeningFactor;
+	cocos2d::DrawNode* line;
 };
 

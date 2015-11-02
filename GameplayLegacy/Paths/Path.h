@@ -1,6 +1,6 @@
 #pragma once
 
-#include "src/Gameplay/Paths/PathSegment.h"
+#include "src/GameplayLegacy/Paths/PathSegment.h"
 #include <vector>
 #include <map>
 
