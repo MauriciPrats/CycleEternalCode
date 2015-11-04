@@ -1,26 +1,27 @@
 #pragma once
 
 #include "cocos2d.h"
+#include <vector>
+#include "src/Gameplay/Train/TrainHead.h"
+#include "src/Gameplay/Train/Wagon.h"
+#include "src/Gameplay/GameObject.h"
 
 
-class Train
+class Train : public GameObject
 {
 public:
-	Train(cocos2d::Layer* layer,cocos2d::Vec2 position,bool isTrainLeader,Train* trainLeader);
+	Train(cocos2d::Layer* layerPutInto,TrainHead* trainHead);
 	~Train();
 
 	void Update(float deltaTime);
-	const cocos2d::Vec2* getVelocity(){ return velocity; }
-	const cocos2d::Vec2* getPosition(){ return position; }
-	void setVelocity(cocos2d::Vec2 newVelocity){ velocity->set(newVelocity); }
-private:
-	 cocos2d::Layer* layerIsPutInto;
-	 cocos2d::Sprite* sprite;
-	 bool isTrainLeader;
-	 Train* trainLeader;
-	 cocos2d::Vec2* position;
-	 cocos2d::Vec2* velocity;
+	void addWagon(cocos2d::Vec2 position);
+	void addWagon();
+	TrainHead* getTrainHead(){ return trainHead; }
 
-	 float timeAccumulatedSincePathDeployed;
+private:
+	TrainHead* trainHead;
+	std::vector<Wagon*>* wagons;
+	cocos2d::Layer* layerPutInto;
+
 };
 

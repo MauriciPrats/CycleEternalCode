@@ -3,45 +3,30 @@
 
 USING_NS_CC;
 
-Train::Train(Layer* layer, Vec2 position, bool isTrainLeader, Train* trainLeader)
+Train::Train(Layer* layerPutInto,TrainHead* trainHead)
 {
-	layerIsPutInto = layer;
-	sprite = Sprite::create("MovingTrain.png");
-	sprite->setPosition(position);
-	layer->addChild(sprite);
-	this->position = new Vec2();
-	this->position->set(position);
-	velocity = new Vec2();
-	velocity->set(50, 50);
-	this->isTrainLeader = isTrainLeader;
-	this->trainLeader = trainLeader;
-	timeAccumulatedSincePathDeployed = 0.0f;
+	this->trainHead = trainHead;
+	wagons = new std::vector<Wagon*>();
+	this->layerPutInto = layerPutInto;
 }
-
 
 Train::~Train()
 {
-	layerIsPutInto->removeChild(sprite);
+
 }
 
 void Train::Update(float deltaTime){
-	*position += (deltaTime * *velocity);
-	sprite->setPosition(*position);
-	//Rotate the sprite
-	Vec2 lookTowards = *position + *velocity;
-	Util::rotateNodeToPoint(sprite, lookTowards);
-
-	
-	if (isTrainLeader ){
-		timeAccumulatedSincePathDeployed += deltaTime;
-		if (timeAccumulatedSincePathDeployed > 0.15f){
-			timeAccumulatedSincePathDeployed = 0.0f;
-			Sprite* s = Sprite::create("PathSegment.png");
-			s->setPosition(*position);
-			layerIsPutInto->addChild(s);
-			Util::rotateNodeToPoint(s, lookTowards);
-		}
+	trainHead->Update(deltaTime);
+	for (int i = 0; i < wagons->size(); ++i){
+		wagons->at(i)->Update(deltaTime);
 	}
+}
 
+void Train::addWagon(cocos2d::Vec2 position){
+	Wagon* newWagon = new Wagon(layerPutInto, position, trainHead);
+	wagons->push_back(newWagon);
+}
 
+void Train::addWagon(){
+	addWagon(trainHead->getStepPosition(0));
 }

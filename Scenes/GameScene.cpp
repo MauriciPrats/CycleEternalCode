@@ -1,5 +1,7 @@
 #include "GameScene.h"
-#include "src/Gameplay/Train/Train.h"
+#include "src/Gameplay/Train/Wagon.h"
+#include "src/Gameplay/GameManager.h"
+
 
 USING_NS_CC;
 
@@ -41,12 +43,11 @@ void GameScene::onMouseEventUp(Event* event){
 void  GameScene::processInput(cocos2d::Vec2 position,float deltaTime){
 	
 	//Attraction
-	for (int i = 0; i < trains->size(); ++i){
-		float speed = trains->at(i)->getVelocity()->getLength();
-		Vec2 attractionDirection = position - *trains->at(i)->getPosition();
-		Vec2 originalVelocity = *trains->at(i)->getVelocity();
+	float speed = train->getTrainHead()->getVelocity()->getLength();
+	Vec2 attractionDirection = position - *train->getTrainHead()->getPosition();
+	Vec2 originalVelocity = *train->getTrainHead()->getVelocity();
 		line->clear();
-		line->drawLine(*trains->at(i)->getPosition(), position, cocos2d::Color4F(1, 0, 0, 1));
+		line->drawLine(*train->getTrainHead()->getPosition(), position, cocos2d::Color4F(1, 0, 0, 1));
 		Vec2 orbitDirection = attractionDirection.rotateByAngle(Vec2::ZERO, M_PI / 2);
 		float attractionDirectionSymbol = 1.0f;
 		if (Vec2::angle(originalVelocity, orbitDirection) >(M_PI / 2)){
@@ -56,26 +57,22 @@ void  GameScene::processInput(cocos2d::Vec2 position,float deltaTime){
 		actualDampeningFactor += deltaTime * (1.0/timeToGetFullRotation);
 		if (actualDampeningFactor > 1.0f){ actualDampeningFactor = 1.0f; }
 		
-		Vec2 velocity = (orbitDirection.getNormalized() * attractionDirectionSymbol * actualDampeningFactor) + trains->at(i)->getVelocity()->getNormalized();
+		Vec2 velocity = (orbitDirection.getNormalized() * attractionDirectionSymbol * actualDampeningFactor) + train->getTrainHead()->getVelocity()->getNormalized();
 		if (abs(Vec2::angle(velocity, attractionDirection)) < abs(Vec2::angle(originalVelocity, attractionDirection))){
-			trains->at(i)->setVelocity(velocity.getNormalized()*speed);
+			train->getTrainHead()->setVelocity(velocity.getNormalized()*speed);
 		}
-		else{
-			CCLOG("%f", abs(Vec2::angle(velocity, attractionDirection)));
-			CCLOG("%f", abs(Vec2::angle(originalVelocity, attractionDirection)));
-			CCLOG("-----");
-		}
-	}
 }
 
 void GameScene::loadSceneElements(){
+	timeTillLastSpawn = 0.0f;
 	line = DrawNode::create();
 	this->addChild(line);
-	trains = new std::vector<Train*>();
 	isMousePressedDown = false;
 	actualDampeningFactor = 0.0f;
-	Train* train = new Train(this, Vec2(100,200),true,nullptr);
-	trains->push_back(train);
+	spawnedStuff = 0;
+	TrainHead* trainHead = new TrainHead(this, Vec2(100, 200));
+	train = new Train(this, trainHead);
+	GameManager::getInstance().registerGameObject(train);
 
 	schedule(schedule_selector(GameScene::update));
 
@@ -91,11 +88,18 @@ void GameScene::loadSceneElements(){
 }
 
 void GameScene::update(float deltaTime){
+	timeTillLastSpawn += deltaTime;
+
+	GameManager::getInstance().Update(deltaTime);
+
 	if (isMousePressedDown){
 		processInput(*lastPointPressed,deltaTime);
 	}
 
-	for (int i = 0; i < trains->size(); ++i){
-		trains->at(i)->Update(deltaTime);
+	if (timeTillLastSpawn > 0.30f && spawnedStuff<4){
+		timeTillLastSpawn = 0.0f;
+		spawnedStuff++;
+		train->addWagon();
 	}
+	
 }
